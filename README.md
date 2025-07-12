@@ -44,32 +44,49 @@ Set your DB and Mailtrap credentials:
 
 env
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=laravel
-DB_USERNAME=root
-DB_PASSWORD=your_password
-
 BROADCAST_DRIVER=pusher
+
 QUEUE_CONNECTION=rabbitmq
 
 PUSHER_APP_ID=local
+
 PUSHER_APP_KEY=local
+
 PUSHER_APP_SECRET=local
+
 PUSHER_HOST=127.0.0.1
+
 PUSHER_PORT=6001
+
 PUSHER_SCHEME=http
+
 PUSHER_APP_CLUSTER=mt1
 
 MAIL_MAILER=smtp
+
 MAIL_HOST=smtp.mailtrap.io
+
 MAIL_PORT=2525
+
 MAIL_USERNAME=your_mailtrap_user
+
 MAIL_PASSWORD=your_mailtrap_pass
+
 MAIL_ENCRYPTION=null
+
 MAIL_FROM_ADDRESS=chat@example.com
+
 MAIL_FROM_NAME="Laravel Chat"
+
+RABBITMQ_HOST=127.0.0.1
+
+RABBITMQ_PORT=5672
+
+RABBITMQ_USER=guest
+
+RABBITMQ_PASSWORD=guest
+
+RABBITMQ_VHOST=/
 
 Run migrations
 
