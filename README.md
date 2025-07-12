@@ -7,60 +7,150 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Laravel WebSockets + RabbitMQ Real-Time Chat
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A Laravel 10 chat application with:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- 🧵 Real-time messaging via Laravel WebSockets  
+- 📨 Notifications queued through RabbitMQ  
+- 📧 Email alerts on chat messages and user registration  
+- 🧑 Auth (login/register)
+- 🔄 Broadcast chat messages using Echo + Pusher protocol
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📦 1. How to Clone & Install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Clone the repository
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Choose **HTTPS** or **SSH**:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# HTTPS
+git clone https://github.com/sashokrist/LaravelWedSoketsRabbitMQChat.git
 
-## Laravel Sponsors
+# OR SSH
+git clone git@github.com:sashokrist/LaravelWedSoketsRabbitMQChat.git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Then:
 
-### Premium Partners
+cd LaravelWedSoketsRabbitMQChat
+composer install
+npm install && npm run build
+cp .env.example .env
+php artisan key:generate
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Configure your .env
+Set your DB and Mailtrap credentials:
 
-## Contributing
+env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=your_password
 
-## Code of Conduct
+BROADCAST_DRIVER=pusher
+QUEUE_CONNECTION=rabbitmq
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+PUSHER_APP_ID=local
+PUSHER_APP_KEY=local
+PUSHER_APP_SECRET=local
+PUSHER_HOST=127.0.0.1
+PUSHER_PORT=6001
+PUSHER_SCHEME=http
+PUSHER_APP_CLUSTER=mt1
 
-## Security Vulnerabilities
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_mailtrap_user
+MAIL_PASSWORD=your_mailtrap_pass
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=chat@example.com
+MAIL_FROM_NAME="Laravel Chat"
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Run migrations
 
-## License
+php artisan migrate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2. How to Run
+Make sure the following services are running:
+
+MySQL (via XAMPP or similar)
+
+RabbitMQ (http://localhost:15672)
+
+Laravel WebSockets
+
+# Start Laravel WebSocket server
+php artisan websockets:serve
+
+# Start the Laravel queue worker (uses RabbitMQ)
+php artisan queue:work
+php artisan queue:work rabbitmq
+npm run dev
+
+# Serve the app
+php artisan serve
+
+Visit: http://localhost:8000
+
+3. Functionality Overview
+✅ Authentication
+User registration/login using Laravel Breeze.
+
+Registration sends welcome email (via Mailtrap).
+
+💬 Real-Time Chat
+Authenticated users can send messages.
+
+Messages are broadcast live via WebSockets.
+
+Chat messages are saved and broadcast using MessageSent event.
+
+📨 Queued Notifications
+When a message is sent:
+
+A job (NotifyChatUser) is dispatched using RabbitMQ.
+
+Logs the message content to the Laravel log.
+
+Sends an email to a test address (e.g., Mailtrap).
+
+📧 Email Integration
+Emails sent via Mailtrap.
+
+On user registration: Welcome email.
+
+On chat message sent: "New Chat Message" email.
+
+🛠️ Stack
+Laravel 10
+
+Laravel WebSockets (beyondcode/laravel-websockets)
+
+RabbitMQ (via vladimir-yuldashev/laravel-queue-rabbitmq)
+
+Mailtrap for testing emails
+
+Pusher-compatible WebSocket frontend via Laravel Echo
+
+🧪 Testing
+After registering and logging in, open two browser tabs:
+
+Send a message in one.
+
+See it appear in the other in real time.
+
+Confirm the log and Mailtrap email.
+
+✅ TODO
+ Real-time WebSockets
+
+ Queued job via RabbitMQ
+
+ Email integration
+
+ Minimal frontend
