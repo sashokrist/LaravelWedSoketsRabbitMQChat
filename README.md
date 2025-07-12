@@ -157,6 +157,14 @@ Pusher-compatible WebSocket frontend via Laravel Echo
 🧪 Testing
 After registering and logging in, open two browser tabs:
 
+Dev tool/console add:
+
+Echo.channel('chat')
+    .listen('MessageSent', (e) => {
+        console.log('📩 PUBLIC received:', e);
+    });
+
+
 Send a message in one.
 
 See it appear in the other in real time.
